@@ -27,19 +27,21 @@ After the build and deployment process is successful, you can check your ECR rep
 In order to train your custom model you can use the following Python script.
 ```python
 import sagemaker
+from sagemaker import get_execution_role
 from sagemaker.estimator import Estimator
 
 session = sagemaker.Session()
 WORK_DIRECTORY = "data"
 train_input = session.upload_data(WORK_DIRECTORY, key_prefix=prefix) # put "loan-eligibility.csv" file in your S3 bucket
 image = # Your Image URI in ECR repository
+role = get_execution_role()
 
 estimator = Estimator(
     image,
     role,
     1,
     "ml.m5.xlarge",
-    output_path="s3://{}/output".format(sess.default_bucket()),
+    output_path="s3://{}/output".format(session.default_bucket()),
     sagemaker_session=session,
 )
 
